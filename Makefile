@@ -71,4 +71,3 @@ fclean: clean
 	rm -f $(LIB) $(LIB_BONUS) $(TESTBIN)
 
 re: fclean all
-

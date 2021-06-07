@@ -13,6 +13,7 @@
 #include <errno.h>
 #include <stdlib.h>
 #include "libasm.h"
+#include "libasm_bonus.h"
 
 static inline void	test(int passed) {
 	if (passed) {
