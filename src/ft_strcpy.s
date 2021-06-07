@@ -6,15 +6,15 @@ _ft_strcpy:
 	xor	rcx, rcx
 
 _loop:
-	cmp [rdi + rcx], byte 0
+	cmp [rsi + rcx], byte 0
 	jz	done
-	mov dl, [rdi + rcx]
-	mov [rsi + rcx], dl
+	mov dl, [rsi + rcx]
+	mov [rdi + rcx], dl
 	inc	rcx
 	jmp _loop
 
 done:
-	mov [rsi + rcx], byte 0
-	mov rax, rsi
+	mov [rdi + rcx], byte 0
+	mov rax, rdi
 	ret
 	

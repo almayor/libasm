@@ -7,18 +7,19 @@ _ft_strcmp:
 	xor rcx, rcx
 
 _loop:
-	mov dl, byte [rdi + rcx]
-	sub dl, byte [rsi + rcx]
-	jnz return
+	movzx dx, byte [rdi + rcx]
+	movzx ax, byte [rsi + rcx]
 
-	mov al, byte [rdi + rcx]
-	and al, byte [rsi + rcx]
-	jz	return
+	cmp dx, ax
+	jne	_return
+
+	test dx, ax
+	jz _return
 
 	inc rcx
 	jmp _loop
 
-return:
-	movsx rax, dl	
+_return:
+	sub dx, ax
+	movsx eax, dx	
 	ret
-	

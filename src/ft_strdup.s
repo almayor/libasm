@@ -12,8 +12,8 @@ _ft_strdup:
 	call _malloc
 	cmp rax, 0				; malloc returns NULL
 	jz error
-	pop rdi
-	mov rsi, rax
+	pop rsi
+	mov rdi, rax
 	sub rsp, 8				; aligning stack at 16-byte boundary
 	call _ft_strcpy
 	add rsp, 8				; restoring stack
