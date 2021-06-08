@@ -6,12 +6,12 @@ section .text
 _ft_write:
 	mov	 rax, 0x02000004
 	syscall
-	jnc return
-error:
+	jnc _return
+_error:
 	push rax					; aligning stack at 16-byte boundary
 	call ___error
 	pop rdx
 	mov [rax], edx				; setting errno
 	mov rax, -1
-return:
+_return:
 	ret

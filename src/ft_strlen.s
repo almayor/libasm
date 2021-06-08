@@ -7,10 +7,10 @@ _ft_strlen:
 
 _loop:
 	cmp [rdi + rax], byte 0
-	jz	done
+	jz	_done
 	inc	rax
 	jmp _loop
 	
-done:
+_done:
 	ret
 	
