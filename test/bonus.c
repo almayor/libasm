@@ -29,7 +29,8 @@ static t_list	*create_list(char **data) {
 		node1 = node2;
 		++data;
 	}
-	node1->next = NULL;
+	if (node1)
+		node1->next = NULL;
 	return head;
 }
 
@@ -43,7 +44,7 @@ static int		compare_list(t_list *head, char **data) {
 	return 0;
 }
 
-static void		print_list(const t_list *head) {
+void		print_list(const t_list *head) {
 	while (head) {
 		printf("%s -> ", head->data);
 		head = head->next;
@@ -93,6 +94,15 @@ static void		remove_data(void *data) {
 
 static int		compare_data(void *s1, void *s2) {
 	return strcmp(s1, s2);
+}
+
+
+static int compare_atoi_data(void *s1, void *s2) {
+	int i1, i2;
+
+	i1 = atoi(s1);
+	i2 = atoi(s2);
+	return i1 - i2;
 }
 
 void			test_list_remove_if(void) {
@@ -146,3 +156,70 @@ void			test_list_remove_if(void) {
 	free_list(list);
 }
 
+void test_list_sort(void) {
+	t_list	*list;
+
+	printf("\n* ft_list_sort:\t\t");
+
+	list = create_list((char *[]){"1", "2", "3", "4", "5", NULL});
+	ft_list_sort(&list, &compare_data);
+	test(compare_list(list, (char *[]){"1", "2", "3", "4", "5", NULL}) == 0);
+	free_list(list);
+
+	list = create_list((char *[]){"1", "2", NULL});
+	ft_list_sort(&list, &compare_data);
+	test(compare_list(list, (char *[]){"1", "2", NULL}) == 0);
+	free_list(list);
+
+	list = create_list((char *[]){"1", NULL});
+	ft_list_sort(&list, &compare_data);
+	test(compare_list(list, (char *[]){"1", NULL}) == 0);
+	free_list(list);
+
+	list = create_list((char *[]){NULL});
+	ft_list_sort(&list, &compare_data);
+	test(compare_list(list, (char *[]){NULL}) == 0);
+	free_list(list);
+
+	list = create_list((char *[]){"2", "1", NULL});
+	ft_list_sort(&list, &compare_data);
+	test(compare_list(list, (char *[]){"1", "2", NULL}) == 0);
+	free_list(list);
+
+	list = create_list((char *[]){"1", "1", NULL});
+	ft_list_sort(&list, &compare_data);
+	test(compare_list(list, (char *[]){"1", "1", NULL}) == 0);
+	free_list(list);
+
+	list = create_list((char *[]){"2", "1", "3", NULL});
+	ft_list_sort(&list, &compare_data);
+	test(compare_list(list, (char *[]){"1", "2", "3", NULL}) == 0);
+	free_list(list);
+
+
+	list = create_list((char *[]){"1", "3", "2", NULL});
+	ft_list_sort(&list, &compare_data);
+	test(compare_list(list, (char *[]){"1", "2", "3", NULL}) == 0);
+	free_list(list);
+
+	list = create_list((char *[]){"1", "3", "1", NULL});
+	ft_list_sort(&list, &compare_data);
+	test(compare_list(list, (char *[]){"1", "1", "3", NULL}) == 0);
+	free_list(list);
+
+
+	list = create_list((char *[]){"2", "1", "3", "-1", NULL});
+	ft_list_sort(&list, &compare_data);
+	test(compare_list(list, (char *[]){"-1", "1", "2", "3", NULL}) == 0);
+	free_list(list);
+
+	list = create_list((char *[]){"3", "2", "1", "-1", NULL});
+	ft_list_sort(&list, &compare_data);
+	test(compare_list(list, (char *[]){"-1", "1", "2", "3", NULL}) == 0);
+	free_list(list);
+
+	list = create_list((char *[]){"12", "45", "1", "-1", "232", "34", "23", "87879", NULL});
+	ft_list_sort(&list, &compare_atoi_data);
+	test(compare_list(list, (char *[]){"-1", "1", "12", "23", "34", "45", "232", "87879", NULL}) == 0);
+	free_list(list);
+}

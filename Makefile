@@ -1,5 +1,4 @@
 LIB = libasm.a
-LIB_BONUS = libasm_bonus.a
 TESTBIN = runtests
 
 ################################################################################
@@ -23,16 +22,18 @@ OBJ_TEST = $(patsubst $(TESTDIR)/%.c, $(OBJDIR)/$(TESTDIR)/%.o, $(SRC_TEST))
 ################################################################################
 
 ifeq ($(DEBUG), 1) 
-	FLAGS = -g
+	FLAGS += -g
 endif
 
 ################################################################################
 
+ifeq ($(BONUS), 1)
+$(LIB): $(OBJ) $(OBJ_BONUS)
+	ar -rcs $@ $^
+else
 $(LIB): $(OBJ)
 	ar -rcs $@ $^ 
-
-$(LIB_BONUS) : $(OBJ) $(OBJ_BONUS)
-	ar -rcs $@ $^ 
+endif
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.s
 	mkdir -p $(@D)
@@ -42,8 +43,9 @@ $(OBJDIR)/$(TESTDIR)/%.o: $(TESTDIR)/%.c
 	mkdir -p $(@D)
 	gcc -I $(INCDIR) -I $(TESTDIR) -MMD $< $(FLAGS) -c -o $@
 
-$(TESTBIN): $(LIB_BONUS) $(OBJ_TEST)
-	gcc -lasm_bonus -L . $(OBJ_TEST) -o $(TESTBIN)
+$(TESTBIN): $(OBJ_TEST)
+	BONUS=1 make all
+	gcc -lasm -L . $(OBJ_TEST) -o $(TESTBIN)
 
 ################################################################################
 
@@ -59,15 +61,16 @@ DEP = $(wildcard $(OBJDIR)/$(TESTDIR)/*.d)
 
 all: $(LIB)
 
-bonus: $(LIB_BONUS)
+bonus:
+	BONUS=1 make all
 
-test: all bonus $(TESTBIN)
+test: $(TESTBIN)
 	./$(TESTBIN)
 
 clean:
 	rm -rf $(OBJDIR)
 
 fclean: clean
-	rm -f $(LIB) $(LIB_BONUS) $(TESTBIN)
+	rm -f $(LIB) $(TESTBIN)
 
 re: fclean all

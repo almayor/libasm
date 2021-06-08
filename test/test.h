@@ -38,5 +38,6 @@ void	test_write(void);
 void test_list_size(void);
 void test_list_push_front(void);
 void test_list_remove_if(void);
+void test_list_sort(void);
 
 #endif
